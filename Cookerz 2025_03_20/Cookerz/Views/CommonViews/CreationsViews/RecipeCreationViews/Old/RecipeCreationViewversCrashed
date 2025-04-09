@@ -1,0 +1,517 @@
+//
+//
+//import SwiftUI
+//
+//struct RecipeCreationView: View {
+//    
+//    @State private var isTimePickerPresented = false
+//    @State private var isIngredientPickerPresented = false
+//    @State private var isIngredientUnitPickerPresented = false
+//    @State private var isUstensilTypePickerPresented = false
+//    
+//    @State private var ingredientChosen : Bool = false
+//    @State private var ustensilChosen : Bool = false
+//    
+//    @State var CreatorId: UUID = users[0].id
+//    
+//    @State var recipeName: String = ""
+//    @State var recipeImage: String? = nil
+//    
+//    @State var recipeTimeHours: Int = 0
+//    @State var recipeTimeMinutes: Int = 0
+//    
+//    @State var recipedifficulty : Level = .defaultdifficulty
+//    
+//    @State var recipePortionNb: Int = 1
+//    
+//    @State var listIngredients: [Ingredient] = []
+//    @State var newIngredient : Ingredient = ingredientsBase[0]
+//    @State var newIngredientQuantity : String = ""
+//    @State var newIngredientUnit : IngredientUnit = .gramme
+//    
+//    @State var listUstensils: [Ustensil] = []
+//    @State var newUstensilType: UstensilType = .cookerMachine
+//    @State var newUstensilName : String = ""
+//    
+//    @State var listSteps: [String] = []
+//    @State var newStep : String = ""
+//    
+//    @State var selectedPart: RecipeEnum = .ingredients
+//    
+//    
+//    
+//    
+//    var body: some View {
+//        ZStack (alignment: .bottom){
+//            Color.white.ignoresSafeArea()
+//            
+//            ScrollView {
+//                ZStack(alignment: .top) {
+//                    ZStack {
+//                        if recipeImage == nil {
+//                            Rectangle()
+//                                .fill(Color.grisFond)
+//                                .frame(width: UIScreen.main.bounds.width, height: 200)
+//                                .ignoresSafeArea()
+//                        }
+//                        else {
+//                            Image(recipeImage!)
+//                                .resizable()
+//                                .scaledToFill()
+//                                .frame(width: UIScreen.main.bounds.width, height: 200)
+//                                .ignoresSafeArea()
+//                        }
+//                        Button {
+//                            recipeImage = "cake_sans_lactose"
+//                        } label: {
+//                            VStack {
+//                                Image("addPhoto")
+//                                if recipeImage == nil {
+//                                    Text("Ajouter une photo")
+//                                        .foregroundStyle(.black)
+//                                } else {
+//                                    Text("Changer la photo")
+//                                        .foregroundStyle(.black)
+//                                }
+//                            }
+//                            .padding()
+//                            .background(Color.white.opacity(0.5))
+//                            .cornerRadius(10)
+//                            
+//                        }
+//                    }
+//                    
+//                    VStack(alignment: .leading, spacing: 10) {
+//                        Rectangle()
+//                            .fill(Color.clear)
+//                            .frame(width: UIScreen.main.bounds.width, height: 180)
+//                        
+//                        VStack {
+//                            TextField("Nom de la recette", text: $recipeName)
+//                            
+//                            HStack(spacing: 8) {
+//                                Button {
+//                                    withAnimation() {
+//                                        isTimePickerPresented.toggle()
+//                                    }
+//                                    
+//                                } label :{
+//                                    RecipeCreationTimeView(recipeTimeHours: $recipeTimeHours, recipeTimeMinutes: $recipeTimeMinutes)
+//                                }
+//                                
+//                                RecipeCreationDifficultyView(recipedifficulty: $recipedifficulty)
+//                            }
+//                            
+//                            Picker("Catégorie", selection: $selectedPart) {
+//                                Text("Ingrédients").tag(RecipeEnum.ingredients)
+//                                Text("Instructions").tag(RecipeEnum.instructions)
+//                            }
+//                            .pickerStyle(.segmented)
+//                            .padding(.horizontal)
+//                            .colorScheme(.light)
+//                            .padding(.bottom)
+//                            
+//                            if selectedPart == .ingredients {
+//                                RecipeCreationStuffView(
+//                                    numberPortionChosen: $recipePortionNb,
+//                                    isIngredientPickerPresented : $isIngredientPickerPresented, ingredientChosen : $ingredientChosen, listIngredients : $listIngredients, newIngredient : $newIngredient,
+//                                    newIngredientQuantity: $newIngredientQuantity,
+//                                    isIngredientUnitPickerPresented : $isIngredientUnitPickerPresented,
+//                                    newIngredientUnit: $newIngredientUnit,  isUstensilTypePickerPresented: $isUstensilTypePickerPresented, ustensilChosen : $ustensilChosen, listUstensils: $listUstensils,  newUstensilType: $newUstensilType, newUstensilName : $newUstensilName)
+//                            } else {
+//                                StepsView(listSteps: $listSteps)
+//                                
+//                                newStepView(listSteps : $listSteps, newStep : $newStep)
+//                            }
+//                            
+//                            
+//                            if recipeImage != nil
+//                                && !recipeName.isEmpty
+//                                && (recipeTimeHours > 0 || recipeTimeMinutes > 0)
+//                                && recipedifficulty != .defaultdifficulty
+//                                && !listIngredients.isEmpty && !listSteps.isEmpty
+//                            {
+//                                Button {
+//                                    
+//                                } label: {
+//                                    HStack {
+//                                        Text("Poster la recette")
+//                                            .foregroundStyle(.white)
+//                                    }
+//                                    .padding()
+//                                    .frame(maxWidth: .infinity)
+//                                    .background(Color.red)
+//                                    .cornerRadius(20)
+//                                } }
+//                            else {
+//                                HStack {
+//                                    Text("Poster la recette")
+//                                        .foregroundStyle(.white)
+//                                }
+//                                .padding()
+//                                .frame(maxWidth: .infinity)
+//                                .background(Color.gray)
+//                                .cornerRadius(20)
+//                            }
+//                            
+//                        
+//                        
+//                    }
+//                    .padding(20)
+//                    .padding(.bottom, 20)
+//                    .background(Color.white)
+//                    .cornerRadius(20)
+//                    
+//                }
+//            }
+//        }
+//        
+//    }
+//    if isTimePickerPresented {
+//        PickerTimeModalView(TimeHours: $recipeTimeHours, TimeMinutes: $recipeTimeMinutes, isPickerPresented: $isTimePickerPresented)
+//    }
+//    if isIngredientPickerPresented {
+//        PickerIngredientView(isPickerPresented: $isIngredientPickerPresented, ingredientChosen: $ingredientChosen, ingredient: $newIngredient)
+//    }
+//    if isIngredientUnitPickerPresented {
+//        PickerIngredientUnitView(isPickerPresented: $isIngredientUnitPickerPresented, ingredientUnit: $newIngredientUnit)
+//    }
+//    if isUstensilTypePickerPresented {
+//        PickerUstensilTypeView(isPickerPresented: $isUstensilTypePickerPresented, ustensilChosen: $ustensilChosen, ustensilType: $newUstensilType)
+//    }
+//}
+//}
+//
+//
+//
+//#Preview {
+//    RecipeCreationView()
+//}
+//
+//struct RecipeCreationTimeView: View {
+//    @Binding var recipeTimeHours: Int
+//    @Binding var recipeTimeMinutes: Int
+//    
+//    var body: some View {
+//        VStack {
+//            Image("minuteur")
+//            Text("\(recipeTimeHours) h \(recipeTimeMinutes) mn")
+//                .foregroundStyle(.black)
+//        }
+//        .padding(16)
+//        .frame(maxWidth: .infinity)
+//        .background(Color.red50)
+//        .cornerRadius(16)
+//    }
+//}
+//
+//
+//
+//
+//struct RecipeCreationDifficultyView: View {
+//    @Binding var recipedifficulty: Level
+//    
+//    // Function to toggle in enum difficulty
+//    func toggleDifficulty() {
+//        switch recipedifficulty {
+//        case .defaultdifficulty:
+//            return recipedifficulty = .easy
+//        case .easy:
+//            return recipedifficulty = .medium
+//        case .medium:
+//            return recipedifficulty = .hard
+//        case .hard:
+//            return recipedifficulty = .easy
+//        }
+//    }
+//    
+//    var body: some View {
+//        Button {
+//            toggleDifficulty()
+//        } label: {
+//            VStack {
+//                if recipedifficulty == .defaultdifficulty {
+//                    Image(Level.easy.IconBlackWhite)
+//                } else {
+//                    Image(recipedifficulty.IconBlackWhite)
+//                }
+//                
+//                Text(recipedifficulty.name)
+//                    .foregroundStyle(.black)
+//            }
+//        }
+//        .padding(16)
+//        .frame(maxWidth: .infinity)
+//        .background(Color.red50)
+//        .cornerRadius(16)
+//    }
+//}
+//
+//struct RecipeCreationStuffView: View {
+//    
+//    
+//    @Binding var numberPortionChosen : Int
+//    
+//    @Binding var isIngredientPickerPresented : Bool
+//    @Binding var ingredientChosen : Bool
+//    
+//    @Binding var listIngredients : [Ingredient]
+//    @Binding var newIngredient : Ingredient
+//    @Binding var newIngredientQuantity : String
+//    @Binding var isIngredientUnitPickerPresented : Bool
+//    @Binding var newIngredientUnit : IngredientUnit
+//    
+//    
+//    
+//    @Binding var isUstensilTypePickerPresented : Bool
+//    @Binding var ustensilChosen : Bool
+//    
+//    @Binding var listUstensils : [Ustensil]
+//    @Binding var newUstensilType : UstensilType
+//    @Binding var newUstensilName : String
+//    
+//    var body: some View {
+//        VStack (alignment: .leading) {
+//            PortionsView(numberPortionChosen: $numberPortionChosen)
+//            
+//            CreationListIngredientsView(listIngredients: $listIngredients)
+//            
+//            HStack {
+//                Button {
+//                    isIngredientPickerPresented.toggle()
+//                }label :{
+//                    HStack {
+//                        if ingredientChosen == false {
+//                            Text("Ingredient")
+//                        } else {
+//                            HStack {
+//                                Image(newIngredient.type.Icon)
+//                                    .resizable()
+//                                    .frame(width: 20, height: 20)
+//                                Text(newIngredient.name)
+//                            }
+//                        }
+//                    }
+//                    .padding()
+//                    .background(Color.red50)
+//                    .cornerRadius(100)
+//                }
+//                Spacer()
+//                VStack (alignment: .trailing){
+//                    TextField ("Qt", text: $newIngredientQuantity)
+//                        .keyboardType(.numberPad)
+//                        .onChange(of: newIngredientQuantity) { quantity in
+//                            // Allow only numbers and a comma/period as the decimal separator
+//                            let filtered = quantity.filter { $0.isNumber || $0 == "." || $0 == "," }
+//                            
+//                            // If the input is filtered, update the string with the allowed characters
+//                            if filtered != quantity {
+//                                newIngredientQuantity = filtered
+//                            }
+//                        }
+//                }
+//                .padding()
+//                .background(Color.grisFond)
+//                .cornerRadius(10)
+//                
+//                Button {
+//                    isIngredientUnitPickerPresented.toggle()
+//                }label :{
+//                    HStack {
+//                        Text(newIngredientUnit != .piece ? newIngredientUnit.initial : newIngredientUnit.name )
+//                    }
+//                    .padding()
+//                    .background(Color.red50)
+//                    .cornerRadius(100)
+//                }
+//                
+//                Button{
+//                    if ingredientChosen && !newIngredientQuantity.isEmpty {
+//                        listIngredients.append(Ingredient(name: newIngredient.name, type: newIngredient.type, quantity: Double(newIngredientQuantity), unit : newIngredientUnit ))
+//                        ingredientChosen = false
+//                        newIngredientQuantity = ""
+//                    }
+//                    
+//                }label: {
+//                    RecipeCreationButtonPortionView(textSymbol: "+")
+//                }
+//            }
+//            
+//            Text("Ustensils")
+//                .font(.PoppinsTitle3Medium())
+//            
+//            UstensilView(listUstensils: listUstensils)
+//            
+//            HStack {
+//                Button {
+//                    isUstensilTypePickerPresented.toggle()
+//                }label :{
+//                    HStack {
+//                        if ustensilChosen == false {
+//                            Text("Ustensil")
+//                        }else{
+//                            Image(newUstensilType.Icon)
+//                                .resizable()
+//                                .frame(width: 20, height: 20)
+//                            Text(newUstensilType.name)
+//                        }
+//                    }
+//                    .padding()
+//                    .background(Color.red50)
+//                    .cornerRadius(100)
+//                }
+//                Spacer()
+//                VStack (alignment: .trailing){
+//                    TextField ("Name", text: $newUstensilName)
+//                }
+//                .padding()
+//                .background(Color.grisFond)
+//                .cornerRadius(10)
+//                
+//                Button{
+//                    if ustensilChosen {
+//                        listUstensils.append(Ustensil( name : newUstensilName, type: newUstensilType))
+//                        ustensilChosen = false
+//                    }
+//                }label: {
+//                    RecipeCreationButtonPortionView(textSymbol: "+")
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//struct CreationListIngredientsView: View {
+//    @Binding var listIngredients: [Ingredient]
+//    
+//    func formatNumber(_ number: Double) -> String {
+//        let formattedNumber = String(format: "%.2f", number)
+//        
+//        if formattedNumber.hasSuffix(".00") {
+//            return String(formattedNumber.prefix { $0 != "." })
+//        } else {
+//            return formattedNumber
+//        }
+//    }
+//    
+//    var body: some View {
+//        ForEach(listIngredients, id: \.self) { ingredient in
+//            HStack {
+//                Image(ingredient.type.Icon)
+//                    .resizable()
+//                    .frame(width: 24, height: 24)
+//                
+//                Text(ingredient.name)
+//                    .font(.body)
+//                
+//                Spacer()
+//                
+//                if let quantity = ingredient.quantity, let unit = ingredient.unit {
+//                    let formattedQuantity = formatNumber(quantity)
+//                    Text("\(formattedQuantity) \(unit.initial)")
+//                }
+//                
+//                Button {
+//                    // Remove the ingredient from the list
+//                    if let index = listIngredients.firstIndex(where: { $0.id == ingredient.id }) {
+//                        listIngredients.remove(at: index)
+//                        
+//                    }
+//                } label: {
+//                    RecipeCreationButtonPortionView(textSymbol: "x")
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//
+//struct StepsView: View {
+//    @Binding var listSteps: [String]
+//    
+//    var body: some View {
+//        ForEach(listSteps, id: \.self) { step in
+//            HStack {
+//                HStack {
+//                    Text("\(listSteps.firstIndex(of: step)! + 1)")
+//                }
+//                .frame(width: 30, height: 30)
+//                .background(Color.red50)
+//                .cornerRadius(100)
+//                
+//                Spacer()
+//                
+//                Text(step)
+//                
+//                Button {
+//                    // Remove the step from the list
+//                    if let index = listSteps.firstIndex(of: step) {
+//                        listSteps.remove(at: index)
+//                        
+//                    }
+//                } label: {
+//                    RecipeCreationButtonPortionView(textSymbol: "x")
+//                }
+//            }
+//            .padding(.vertical)
+//        }
+//    }
+//}
+//
+//
+//
+//struct RecipeCreationButtonPortionView: View {
+//    var textSymbol: String
+//    var body: some View {
+//        ZStack {
+//            Circle ()
+//                .fill(Color.red50)
+//                .stroke(Color.grisBordure, lineWidth: 1)
+//                .frame(width: 40, height: 40)
+//            
+//            Text(textSymbol)
+//                .font(.PoppinsFootnote())
+//                .foregroundStyle(.black)
+//        }
+//    }
+//}
+//
+//struct newStepView: View {
+//    @Binding var listSteps: [String]
+//    @Binding var newStep: String
+//    var body: some View {
+//        HStack {
+//            Button {
+//                if !newStep.isEmpty {
+//                    listSteps.append(newStep)
+//                    newStep = ""
+//                }
+//            } label: {
+//                RecipeCreationButtonPortionView(textSymbol: "+")
+//            }
+//            
+//            ZStack(alignment: .topLeading) {
+//                TextEditor(text: $newStep)
+//                    .font(.caption)
+//                    .background(Color.white)
+//                    .cornerRadius(8)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 8.0)
+//                            .stroke(.black, lineWidth: 1))
+//                    .colorScheme(.light)
+//                
+//                if newStep.isEmpty {
+//                    Text("Ajouter une étape")
+//                        .foregroundColor(.black)
+//                        .font(.subheadline)
+//                        .padding([.top, .leading], 14) // Décalage pour éviter que le texte de placeholder ne se superpose avec le texte entré
+//                }
+//            }
+//            .frame(width: .infinity, height: 150)
+//            .cornerRadius(8)
+//            
+//        }
+//    }
+//}
